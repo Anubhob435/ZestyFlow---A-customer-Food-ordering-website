@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || "http://127.0.0.1:3000",
+  origin: process.env.CLIENT_ORIGIN || ["http://127.0.0.1:3000", "http://localhost:3000"],
   credentials: true,
 }));
 
@@ -80,35 +80,24 @@ app.get("/api/*", (req, res) => {
   res.status(404).json({ error: "API endpoint not found" });
 });
 
-// Start server first, then try to connect to MongoDB
+// Start server and connect to MongoDB
 const port = process.env.PORT || 5000;
 
-// For Vercel deployment, we export the app instead of starting a server
-if (process.env.NODE_ENV === 'production') {
-  // Connect to MongoDB for production
-  mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/zestyflow")
-    .then(() => {
-      console.log("✅ Connected to MongoDB");
-    })
-    .catch(err => {
-      console.warn("⚠️  MongoDB connection failed:", err.message);
-    });
-} else {
-  // Local development server
-  app.listen(port, () => {
-    console.log(`✅ Server running on http://127.0.0.1:${port}`);
-    
-    // Try to connect to MongoDB
-    mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/zestyflow")
-      .then(() => {
-        console.log("✅ Connected to MongoDB");
-      })
-      .catch(err => {
-        console.warn("⚠️  MongoDB connection failed:", err.message);
-        console.log("📝 Server will continue running without database functionality");
-      });
+// Connect to MongoDB
+console.log("Attempting to connect to MongoDB...");
+mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/zestyflow")
+  .then(() => {
+    console.log("✅ Connected to MongoDB successfully");
+    console.log("Database URI:", process.env.MONGO_URI ? "Environment variable set" : "Using default local");
+  })
+  .catch(err => {
+    console.error("❌ MongoDB connection failed:", err.message);
+    console.error("Full error:", err);
   });
-}
 
-// Export the app for Vercel
-export default app;
+// Start the server
+app.listen(port, '0.0.0.0', () => {
+  console.log(`✅ Server running on port ${port}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`JWT Secret configured: ${process.env.JWT_SECRET ? 'Yes' : 'No (using fallback)'}`);
+});

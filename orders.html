@@ -108,7 +108,7 @@ function formatDateTime(iso){
 
 async function loadOrders(){
   try {
-    const res = await fetch("http://127.0.0.1:5000/api/orders/me", {
+    const res = await fetch("/api/orders/me", {
       headers: { "Authorization": "Bearer " + token }
     });
     if (!res.ok) throw new Error("Failed to fetch orders");
@@ -155,7 +155,7 @@ async function cancelOrder(orderId, placedTime){
   }
 
   try {
-    const res = await fetch(`http://127.0.0.1:5000/api/orders/${orderId}/cancel`, {
+    const res = await fetch(`/api/orders/${orderId}/cancel`, {
       method:"PATCH",
       headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+token }
     });
