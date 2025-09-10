@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - ZestyFlow</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #24143a;
+      color: #e5e5f7;
+      min-height: 100vh;
+      position: relative;
+      overflow-y: auto;
+      padding: 40px;
+    }
+    .form-box { max-width: 500px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #9c173e; }
+    input, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 6px; border: 1px solid #ccc; }
+    button { background-color: #9c173e; color: white; border: none; cursor: pointer; margin-top: 20px; }
+    button:hover { background-color: #7e1231; }
+    .blurry-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .blurry-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(32px);
+      opacity: 0.28;
+      animation: shimmer 3s linear infinite;
+    }
+    .circle1 { width: 380px; height: 380px; background: #a78bfa; top: 8%; left: 12%; animation-delay: 0s; }
+    .circle2 { width: 260px; height: 260px; background: #f3e8ff; top: 60%; left: 70%; animation-delay: 1s; }
+    .circle3 { width: 220px; height: 220px; background: #c4b5fd; top: 30%; left: 60%; animation-delay: 2s; }
+    .circle4 { width: 180px; height: 180px; background: #a21caf; top: 80%; left: 20%; animation-delay: 1.5s; }
+    .circle5 { width: 150px; height: 150px; background: #fbbf24; top: 20%; left: 80%; animation-delay: 2.5s; }
+    @keyframes shimmer {
+      0% { filter: blur(32px) brightness(1); }
+      50% { filter: blur(32px) brightness(1.2); }
+      100% { filter: blur(32px) brightness(1); }
+    }
+  body { font-family: sans-serif; padding: 30px; background-color:#24143a; }
+    .form-box { max-width: 400px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #9c173e; }
+    input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
+    button { width: 100%; padding: 12px; background-color: #9c173e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+    button:hover { background-color: #7d0d2c; }
+    .signup-link { margin-top: 15px; text-align: center; font-size: 14px; }
+    .signup-link a { color: #9c173e; text-decoration: none; font-weight: bold; }
+    .signup-link a:hover { text-decoration: underline; }
+    .signup-link p { display: inline; margin-right: 5px; color: #555; }
+  </style>
+</head>
+<body>
+<div class="blurry-bg">
+  <div class="blurry-circle circle1"></div>
+  <div class="blurry-circle circle2"></div>
+  <div class="blurry-circle circle3"></div>
+  <div class="blurry-circle circle4"></div>
+  <div class="blurry-circle circle5"></div>
+</div>
+  <div class="form-box">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input type="email" placeholder="Email" required id="email">
+      <input type="password" placeholder="Password" required id="password">
+      <button type="submit">Login</button>
+    </form>
+    <div class="signup-link">
+      <p>Don’t have an account?</p> <a href="signup.html">Sign up</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", loginUser);
+
+    async function loginUser(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          alert("✅ Login successful!");
+          window.location.href = "../account.html";
+        } else {
+          alert(data.message || "❌ Invalid credentials.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("⚠️ Server error. Please try again later.");
+      }
+    }
+  </script>
+</body>
+</html>

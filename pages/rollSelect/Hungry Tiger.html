@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<style>
+    *{
+    margin:0; 
+    padding:0;
+}
+
+.container{
+    position:relative;
+}
+
+.navbar{
+    position:sticky;
+    top:0;
+    width:100%;
+    height:70px; /* Increased height for a larger logo */
+    padding:0 10px; /* No vertical padding */
+    background-color:rgb(156, 24, 77);
+    position:relative;
+    display:flex;
+    align-items:center; /* Center items vertically */
+}
+
+.navbar ul{
+    display:flex;
+    gap:40px;
+    list-style:none;
+    justify-content: center;
+    align-items: center;
+    position : absolute;
+    right:45px;
+    top:25px;
+}
+
+.navbar li {
+    display: flex;
+    align-items: center;
+    font-size: 1.205rem;
+    color:white;
+}
+
+.navbar li:hover{
+    color:rgb(49, 18, 79);
+    cursor:pointer;
+}
+
+.navbar img {
+    height: 120px;         /* Fill navbar vertically */
+    width: auto;
+    margin-left:50px;
+    filter: brightness(0) invert(1);
+    display: block;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.searchArea {
+    position:relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left:15vw;
+}
+
+textarea{
+    width: 400px;
+    min-width: 400px;
+    max-width: 400px;
+    box-sizing: border-box; 
+}
+
+.searchbtn {
+    background: rgb(156, 24, 77);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.searchbtn img {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.filter{
+    position:sticky;
+    top:0;
+    width:100%;
+    height:70px; /* Increased height for a larger logo */
+    padding:0 10px; 
+    position:relative;
+    display:flex;
+    align-items:center;
+    background-color:rgba(239, 213, 213, 0.808);
+}
+
+.filter ul{
+    display:flex;
+    gap:40px;
+    list-style:none;
+    justify-content: center;
+    align-items: center;
+    position : absolute;
+    left:12px;
+    top:25px;
+}
+
+.filter li:hover{
+    color:rgb(140, 1, 145);
+    cursor:pointer;
+}
+
+.menu-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.menucard {
+    display: flex;
+    background-color: #fff4f4;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 39%);
+    padding: 20px;
+    width: 650px;
+    margin: 20px;
+    transition: transform 0.3s ease;
+}
+
+.menucard:hover {
+  transform: scale(1.02);
+}
+
+.food-img {
+  width: 160px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-right: 20px;
+}
+
+.menu-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.menu-info h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #b22222;
+}
+
+.menu-info p {
+  margin: 10px 0;
+  color: #333;
+  font-size: 15px;
+}
+
+.add-btn {
+  align-self: start;
+  padding: 10px 16px;
+  background-color: #d63a3a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #a62828;
+}
+</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZestyFlow</title>
+    <link rel="stylesheet" href="../../style/biriyaniSelect/hungersWorld.css" class="css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <img src="../../images/logo.svg" alt=""></span>
+            
+            <ul>
+               <li><a href="../../home.html" style="color:inherit; text-decoration:none;">Home</a></li>
+                <li>About</li>
+                <li><a href="../../finalmenu.html" style="color:inherit; text-decoration:none;">Menu</a></li>
+                <li><a href="../../account.html" style="color:inherit; text-decoration:none;">Account</a></li>
+                <li><a href="../../cart.html" style="color:inherit; text-decoration:none;">Cart</a></li>
+
+
+            </ul>
+        </nav>
+        
+        <div class="menu-container">
+            <div class="menucard">
+                <img src="../../images/chicken roll8.jpeg" alt="roll" class="food-img" />
+                <div class="menu-info">
+                    <h3> Chicken Roll</h3>
+                    <p> Loaded with Chicken and other spices • ₹90</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/paneer roll8.jpeg" alt="roll" class="food-img" />
+                <div class="menu-info">
+                    <h3>Panner Roll</h3>
+                    <p>Loaded with Paneer and other spices• ₹100</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/egg roll8.jpeg" alt="roll" class="food-img" />
+                <div class="menu-info">
+                    <h3>Egg Roll</h3>
+                    <p>Loaded with Egg and other spices• ₹70</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/k roll8.webp" alt="roll" class="food-img" />
+                <div class="menu-info">
+                    <h3>Kathi Roll</h3>
+                    <p>Loaded with meat and other spices • ₹120</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/E C roll8.webp" alt="roll" class="food-img" />
+                <div class="menu-info">
+                    <h3>Egg Chicken Roll</h3>
+                    <p>Loaded with Egg and Chicken and other spices • ₹130</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/shawarma roll8.jpeg" alt="roll" class="food-img" />
+                <div class="menu-info">
+                    <h3>Shawarma Roll</h3>
+                    <p>Loaded with thinly sliced meat and other spices • ₹150</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    const addButtons = document.querySelectorAll('.add-btn');
+    addButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.menucard');
+            const name = card.querySelector('h3').textContent;
+            const priceText = card.querySelector('p').textContent;
+            const price = priceText.match(/₹(\d+)/)[1];
+
+            const item = {
+                name: name,
+                price: parseInt(price),
+                quantity: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const index = cart.findIndex(i => i.name === item.name);
+            if (index !== -1) {
+                cart[index].quantity += 1;
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${item.name} added to cart`);
+        });
+    });
+</script>
+</body>
+</html>

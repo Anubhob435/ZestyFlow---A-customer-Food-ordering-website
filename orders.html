@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Orders - ZestyFlow</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2d0036 0%, #3a1c5c 100%);
+    margin: 0; padding: 0; color: #eae6f7;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Blurry colored circles background */
+  .bg-circles {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.5;
+    mix-blend-mode: lighten;
+  }
+  /* Shift circles to corners/edges, away from center */
+  .circle1 { width: 300px; height: 300px; background: #a259ff; top: 2%; left: -80px; }
+  .circle2 { width: 220px; height: 220px; background: #f7b2ff; top: 70%; left: 85vw; }
+  .circle3 { width: 180px; height: 180px; background: #5ef1f2; top: 80vh; left: 5vw; }
+  .circle4 { width: 140px; height: 140px; background: #ffb86c; top: 10vh; left: 90vw; }
+  .circle5 { width: 120px; height: 120px; background: #ff6e6e; top: 85vh; left: 80vw; }
+
+  header {
+    background: #9c173e;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+
+  .order-card {
+    background: rgba(40, 20, 60, 0.85);
+    padding: 20px; margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease-in-out;
+  }
+  .order-card:hover { transform: translateY(-4px); }
+
+  .order-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .order-id { font-weight: bold; color: #a259ff; }
+  .order-total { font-size: 16px; font-weight: bold; color: #f7b2ff; }
+  .order-date { font-size: 14px; color: #b8a9d1; margin-bottom: 10px; }
+
+  .order-card ul { list-style: none; padding: 0; margin: 0 0 12px 0; }
+  .order-card ul li { padding: 6px 0; border-bottom: 1px solid #3a1c5c; font-size: 15px; }
+
+  .status {
+    display: inline-block;
+    font-weight: bold;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  .status.placed { background: #e3f2fd; color: #1565c0; }
+  .status.cancelled { background: #fdecea; color: #b71c1c; }
+  .status.delivered { background: #e8f5e9; color: #2e7d32; }
+
+  .cancel-btn {
+    background: #d9534f; color: white; border: none;
+    padding: 8px 16px; border-radius: 6px;
+    cursor: pointer; margin-top: 12px;
+    transition: background 0.2s ease-in-out;
+  }
+  .cancel-btn:hover { background: #b52b27; }
+
+  .empty { text-align: center; color: #b8a9d1; font-size: 18px; margin-top: 60px; }
+</style>
+</head>
+<body>
+<div class="bg-circles">
+  <div class="circle circle1"></div>
+  <div class="circle circle2"></div>
+  <div class="circle circle3"></div>
+  <div class="circle circle4"></div>
+  <div class="circle circle5"></div>
+</div>
+<header>📦 My Orders</header>
+<div class="container" id="orders"></div>
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "pages/login.html";
+
+function formatDateTime(iso){
+  const d = new Date(iso);
+  return d.toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"});
+}
+
+async function loadOrders(){
+  try {
+    const res = await fetch("http://127.0.0.1:5000/api/orders/me", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    if (!res.ok) throw new Error("Failed to fetch orders");
+
+    const orders = await res.json();
+    const box = document.getElementById("orders");
+
+    if (!orders.length){
+      box.innerHTML = `<p class="empty">You haven’t placed any orders yet.</p>`;
+      return;
+    }
+
+    box.innerHTML = orders.map(o=>{
+      const placedAt = new Date(o.createdAt);
+      const canCancel = (o.status === "placed");
+      return `
+        <div class="order-card" id="order-${o._id}">
+          <div class="order-header">
+            <span class="order-id">#${o._id.slice(-6).toUpperCase()}</span>
+            <span class="order-total">Total: ₹${o.total}</span>
+          </div>
+          <div class="order-date">Placed on: ${formatDateTime(o.createdAt)}</div>
+          <ul>
+            ${(o.items || []).map(i=>`<li>${i.name} × ${i.quantity} — ₹${i.price*i.quantity}</li>`).join("")}
+          </ul>
+          <span id="status-${o._id}" class="status ${o.status}">${o.status}</span>
+          ${canCancel ? `<button class="cancel-btn" onclick="cancelOrder('${o._id}','${placedAt.toISOString()}')">Cancel Order</button>` : ""}
+        </div>
+      `;
+    }).join("");
+  } catch(err) {
+    console.error(err);
+    alert("Failed to load orders");
+  }
+}
+
+async function cancelOrder(orderId, placedTime){
+  const now = new Date();
+  const placedAt = new Date(placedTime);
+  const diff = (now - placedAt) / 1000;
+
+  if (diff > 120){
+    return alert("⏳ Time limit exceeded to cancel order.");
+  }
+
+  try {
+    const res = await fetch(`http://127.0.0.1:5000/api/orders/${orderId}/cancel`, {
+      method:"PATCH",
+      headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+token }
+    });
+
+    const data = await res.json();
+    if (!res.ok) return alert(data.message || "Failed to cancel order");
+
+    const statusEl = document.getElementById(`status-${orderId}`);
+    statusEl.textContent = "cancelled";
+    statusEl.className = "status cancelled";
+
+    const btn = document.querySelector(`#order-${orderId} .cancel-btn`);
+    if (btn) btn.remove();
+
+    alert("✅ Order cancelled successfully!");
+  } catch(err) {
+    console.error(err);
+    alert("⚠️ Server error while cancelling order.");
+  }
+}
+
+loadOrders();
+</script>
+</body>
+</html>

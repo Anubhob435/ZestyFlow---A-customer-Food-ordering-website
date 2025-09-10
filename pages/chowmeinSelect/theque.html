@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZestyFlow</title>
+    <link rel="stylesheet" href="../../style/biriyaniSelect/hungersWorld.css" class="css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <img src="../../images/logo.svg" alt=""></span>
+            
+            <ul>
+                <li><a href="../../home.html" style="color:inherit; text-decoration:none;">Home</a></li>
+                <li>About</li>
+                <li><a href="../../finalmenu.html" style="color:inherit; text-decoration:none;">Menu</a></li>
+                <li><a href="../../account.html" style="color:inherit; text-decoration:none;">Account</a></li>
+                <li><a href="../../cart.html" style="color:inherit; text-decoration:none;">Cart</a></li>
+
+
+            </ul>
+        </nav>
+        
+        <div class="menu-container">
+            <div class="menucard">
+                <img src="../../images/vegchow1.jpg" alt="Veg Chowmin" class="food-img" />
+                <div class="menu-info">
+                    <h3>Veg Chowmin</h3>
+                    <p>() • ₹140</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/eggchow1.jpg" alt="Egg Chowmin" class="food-img" />
+                <div class="menu-info">
+                    <h3>Egg Chowmin</h3>
+                    <p>() • ₹150</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/hakk1.jpg" alt="Hakka noodle" class="food-img" />
+                <div class="menu-info">
+                    <h3>Hakka Noodles</h3>
+                    <p>( ) • ₹169</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/manc1.jpg" alt="Manchurian" class="food-img" />
+                <div class="menu-info">
+                    <h3>Veg Manchurian</h3>
+                    <p>() • ₹185</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/spp1.webp" alt="Spring Roll" class="food-img" />
+                <div class="menu-info">
+                    <h3>Veg Spring roll</h3>
+                    <p>() • ₹150</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/schThukpa1.webp" alt="schezwan Thukpa" class="food-img" />
+                <div class="menu-info">
+                    <h3>schezwan Thukpa</h3>
+                    <p>() • ₹199</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    const addButtons = document.querySelectorAll('.add-btn');
+    addButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.menucard');
+            const name = card.querySelector('h3').textContent;
+            const priceText = card.querySelector('p').textContent;
+            const price = priceText.match(/₹(\d+)/)[1];
+
+            const item = {
+                name: name,
+                price: parseInt(price),
+                quantity: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const index = cart.findIndex(i => i.name === item.name);
+            if (index !== -1) {
+                cart[index].quantity += 1;
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${item.name} added to cart`);
+        });
+    });
+</script>
+</body>
+</html>

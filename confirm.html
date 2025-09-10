@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirm Order</title>
+  <link rel="stylesheet" href="cart.css">
+  <style>
+    #confirmationMessage, #downloadBtn {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+    #confirmationMessage {
+      font-size: 1.5em;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Confirm Your Order</h1>
+
+  <table id="confirmTable">
+    <thead>
+      <tr><th>Item</th><th>Price</th><th>Quantity</th><th>Subtotal</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <h3 id="confirmTotal"></h3>
+
+  <div style="text-align:center;">
+    <button class="btn" onclick="confirmOrder()">✅ Confirm Order</button>
+  </div>
+
+  <div id="confirmationMessage">🎉 Order Confirmed!</div>
+  <div style="text-align:center;">
+    <button id="downloadBtn" class="btn" onclick="downloadBill()">⬇️ Download Bill</button>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const tbody = document.querySelector('#confirmTable tbody');
+    let total = 0;
+
+    cart.forEach(item => {
+      const subtotal = item.price * item.quantity;
+      total += subtotal;
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.name}</td>
+        <td>₹${item.price}</td>
+        <td>${item.quantity}</td>
+        <td>₹${subtotal}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    document.getElementById('confirmTotal').textContent = `Total: ₹${total}`;
+
+    function confirmOrder() {
+  document.getElementById('confirmationMessage').style.display = 'block';
+  document.getElementById('downloadBtn').style.display = 'inline-block';
+  alert('Order placed successfully!');
+  localStorage.removeItem('cart');
+    }
+
+    function downloadBill() {
+      let billText = "ZestyFlow - Order Summary\n\n";
+      cart.forEach(item => {
+        billText += `${item.name} x${item.quantity} - ₹${item.price * item.quantity}\n`;
+      });
+      billText += `\nTotal: ₹${total}\n\nThank you for ordering with ZestyFlow!`;
+
+      const blob = new Blob([billText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ZestyFlow_Bill.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
