@@ -56,7 +56,7 @@ router.patch("/:id/cancel", requireAuth, async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    if (order.user.toString() !== req.user.id) {
+    if (order.user.toString() !== req.user.id.toString()) {
       return res.status(403).json({ message: "Not authorized to cancel this order" });
     }
 
