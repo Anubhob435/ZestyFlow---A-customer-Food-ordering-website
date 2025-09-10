@@ -62,8 +62,8 @@ async function loadAccount() {
     document.getElementById("accountBox").innerHTML = `
       <h1>My Account</h1>
       <p class="empty">⚠️ You are not logged in.</p>
-      <a href="pages/login.html" class="btn">Login</a>
-      <a href="pages/signup.html" class="btn">Sign Up</a>
+      <a href="/pages/login.html" class="btn">Login</a>
+      <a href="/pages/signup.html" class="btn">Sign Up</a>
     `;
     return;
   }
@@ -86,8 +86,8 @@ async function loadAccount() {
         <p><strong>Location Type:</strong> ${u.locationType || "-"}</p>
         <p><strong>Age:</strong> ${u.age || "-"}</p>
       </div>
-      <a href="cart.html" class="btn">🛒 Cart</a>
-      <a href="orders.html" class="btn">📦 Order History</a>
+      <a href="/cart.html" class="btn">🛒 Cart</a>
+      <a href="/orders.html" class="btn">📦 Order History</a>
       <button class="btn" onclick="logout()">🚪 Logout</button>
     `;
   } catch (err) {
