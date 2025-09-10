@@ -8,8 +8,21 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/backend/server.js"
+    },
+    {
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|webp|svg|ico|html))",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "backend/server.js"
+      "dest": "/backend/server.js"
     }
-  ]
+  ],
+  "functions": {
+    "backend/server.js": {
+      "maxDuration": 30
+    }
+  }
 }
