@@ -28,8 +28,29 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/menu", menuRoutes);
 
-// Serve static files from the parent directory
-app.use(express.static(path.join(__dirname, "..")));
+// Serve static files from the parent directory with proper headers
+app.use(express.static(path.join(__dirname, ".."), {
+  setHeaders: (res, path, stat) => {
+    if (path.endsWith('.css')) {
+      res.set('Content-Type', 'text/css');
+    }
+    if (path.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    }
+  }
+}));
+
+// Serve images with correct MIME types
+app.use('/images', express.static(path.join(__dirname, '..', 'images'), {
+  setHeaders: (res, path, stat) => {
+    if (path.endsWith('.webp')) {
+      res.set('Content-Type', 'image/webp');
+    }
+    if (path.endsWith('.avif')) {
+      res.set('Content-Type', 'image/avif');
+    }
+  }
+}));
 
 // Root route - serve the main HTML file
 app.get("/", (req, res) => {
