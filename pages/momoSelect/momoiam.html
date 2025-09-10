@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZestyFlow</title>
+    <link rel="stylesheet" href="../../style/biriyaniSelect/hungersWorld.css" class="css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <img src="../../images/logo.svg" alt=""></span>
+            
+            <ul>
+                <li><a href="../../home.html" style="color:inherit; text-decoration:none;">Home</a></li>
+                <li>About</li>
+                <li><a href="../../finalmenu.html" style="color:inherit; text-decoration:none;">Menu</a></li>
+                <li><a href="../../account.html" style="color:inherit; text-decoration:none;">Account</a></li>
+                <li><a href="../../cart.html" style="color:inherit; text-decoration:none;">Cart</a></li>
+
+
+            </ul>
+        </nav>
+        
+        <div class="menu-container">
+            <div class="menucard">
+                <img src="../../images/steammomo5.jpeg" alt="Momo" class="food-img" />
+                <div class="menu-info">
+                    <h3>Steam Momo</h3>
+                    <p> Served with spicy chutney• ₹120</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/friedmomo5.webp" alt="Momo" class="food-img" />
+                <div class="menu-info">
+                    <h3>Fried Momo</h3>
+                    <p>Served with spicy chutney • ₹150</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/schezwanmomo2.jpeg" alt="Momo" class="food-img" />
+                <div class="menu-info">
+                    <h3>Schezwan Momo</h3>
+                    <p>Served with spicy chili sauce • ₹200</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/dumplingmomo2.avif" alt="Momo" class="food-img" />
+                <div class="menu-info">
+                    <h3>Dumpling</h3>
+                    <p>Served with spicy chutney • ₹220</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/tandorimomo2.jpeg" alt="Momo" class="food-img" />
+                <div class="menu-info">
+                    <h3>Tandoori Momo</h3>
+                    <p>Momos with tangy and smoky flavor • ₹240</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/dimsum3.jpeg" alt="Momo" class="food-img" />
+                <div class="menu-info">
+                    <h3>Dimsum</h3>
+                    <p>Served with spicy chutney • ₹180</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    const addButtons = document.querySelectorAll('.add-btn');
+    addButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.menucard');
+            const name = card.querySelector('h3').textContent;
+            const priceText = card.querySelector('p').textContent;
+            const price = priceText.match(/₹(\d+)/)[1];
+
+            const item = {
+                name: name,
+                price: parseInt(price),
+                quantity: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const index = cart.findIndex(i => i.name === item.name);
+            if (index !== -1) {
+                cart[index].quantity += 1;
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${item.name} added to cart`);
+        });
+    });
+</script>
+</body>
+</html> 

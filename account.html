@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Account - ZestyFlow</title>
+  <style>
+    body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #fffaf4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+    h1 { color: #333; margin-bottom: 20px; }
+    .info { text-align: left; margin: 20px 0; font-size: 16px; color: #444; }
+    .info p { margin: 10px 0; padding: 8px; border-bottom: 1px solid #eee; }
+    .btn { display: inline-block; margin: 10px; padding: 12px 20px; background: #9c173e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; text-decoration: none; }
+    .btn:hover { background: #7d0d2c; }
+    .empty { text-align: center; font-size: 18px; color: #777; margin-top: 40px; }
+      body {
+        background: #2a1746;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        color: #e5e5f7;
+      }
+      .blurry-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .blurry-circle {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(18px);
+        opacity: 0.35;
+        animation: shimmer 3s linear infinite;
+      }
+      .circle1 { width: 400px; height: 400px; background: #a78bfa; top: 5%; left: 10%; animation-delay: 0s; }
+      .circle2 { width: 300px; height: 300px; background: #c4b5fd; top: 60%; left: 70%; animation-delay: 1s; }
+      .circle3 { width: 250px; height: 250px; background: #f3e8ff; top: 30%; left: 60%; animation-delay: 2s; }
+      .circle4 { width: 200px; height: 200px; background: #a21caf; top: 80%; left: 20%; animation-delay: 1.5s; }
+      @keyframes shimmer {
+        0% { filter: blur(18px) brightness(1); }
+        50% { filter: blur(18px) brightness(1.3); }
+        100% { filter: blur(18px) brightness(1); }
+      }
+  </style>
+</head>
+<body>
+    <div class="blurry-bg">
+      <div class="blurry-circle circle1"></div>
+      <div class="blurry-circle circle2"></div>
+      <div class="blurry-circle circle3"></div>
+      <div class="blurry-circle circle4"></div>
+    </div>
+  <div class="container" id="accountBox">
+    <h1>My Account</h1>
+    <p class="empty">Loading...</p>
+  </div>
+
+<script>
+async function loadAccount() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    document.getElementById("accountBox").innerHTML = `
+      <h1>My Account</h1>
+      <p class="empty">⚠️ You are not logged in.</p>
+      <a href="pages/login.html" class="btn">Login</a>
+      <a href="pages/signup.html" class="btn">Sign Up</a>
+    `;
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/api/auth/me", {
+      headers: { "Authorization": "Bearer " + token }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+
+    const u = data.user;
+    document.getElementById("accountBox").innerHTML = `
+      <h1>My Account</h1>
+      <div class="info">
+        <p><strong>Name:</strong> ${u.name}</p>
+        <p><strong>Email:</strong> ${u.email}</p>
+        <p><strong>Phone:</strong> ${u.phone || "-"}</p>
+        <p><strong>Location:</strong> ${u.location || "-"}</p>
+        <p><strong>Location Type:</strong> ${u.locationType || "-"}</p>
+        <p><strong>Age:</strong> ${u.age || "-"}</p>
+      </div>
+      <a href="cart.html" class="btn">🛒 Cart</a>
+      <a href="orders.html" class="btn">📦 Order History</a>
+      <button class="btn" onclick="logout()">🚪 Logout</button>
+    `;
+  } catch (err) {
+    console.error("Account load failed:", err);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "pages/login.html";
+  }
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  window.location.href = "pages/login.html";
+}
+
+loadAccount();
+</script>
+</body>
+</html>

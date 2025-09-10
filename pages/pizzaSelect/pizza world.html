@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZestyFlow</title>
+    <link rel="stylesheet" href="../../style/biriyaniSelect/hungersWorld.css" class="css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <img src="../../images/logo.svg" alt=""></span>
+            
+            <ul>
+                 <li><a href="../../home.html" style="color:inherit; text-decoration:none;">Home</a></li>
+                <li>About</li>
+                <li><a href="../../finalmenu.html" style="color:inherit; text-decoration:none;">Menu</a></li>
+                <li><a href="../../account.html" style="color:inherit; text-decoration:none;">Account</a></li>
+                <li><a href="../../cart.html" style="color:inherit; text-decoration:none;">Cart</a></li>
+            </ul>
+        </nav>
+        
+        <div class="menu-container">
+            <div class="menucard">
+                <img src="../../images/chicken pizza5.jpeg" alt="pizza" class="food-img" />
+                <div class="menu-info">
+                    <h3> Grilled Chicken Pizza</h3>
+                    <p> Loaded with Chicken and other spices • ₹180</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/paneer pizza5.jpeg" alt="pizza" class="food-img" />
+                <div class="menu-info">
+                    <h3>Paneer Pizza</h3>
+                    <p>Loaded with Paneer and other spices• ₹160</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/cheese burst pizza5.jpeg" alt="pizza" class="food-img" />
+                <div class="menu-info">
+                    <h3>Cheese Burst Pizza</h3>
+                    <p>Loaded with Cheese and other spices• ₹200</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/margherita5.jpeg" alt="pizza" class="food-img" />
+                <div class="menu-info">
+                    <h3>Margherita Pizza</h3>
+                    <p>Loaded with veggies and other spices • ₹150</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/tandoori pizza5.jpeg" alt="pizza" class="food-img" />
+                <div class="menu-info">
+                    <h3>Tandoori Pizza</h3>
+                    <p>Loaded with spices with tandoori flavour • ₹220</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/farmhouse5.jpeg" alt="pizza" class="food-img" />
+                <div class="menu-info">
+                    <h3>Farmhouse Pizza</h3>
+                    <p>Loaded with veggies and chicken and mushroom and other spices • ₹240</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    const addButtons = document.querySelectorAll('.add-btn');
+    addButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.menucard');
+            const name = card.querySelector('h3').textContent;
+            const priceText = card.querySelector('p').textContent;
+            const price = priceText.match(/₹(\d+)/)[1];
+
+            const item = {
+                name: name,
+                price: parseInt(price),
+                quantity: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const index = cart.findIndex(i => i.name === item.name);
+            if (index !== -1) {
+                cart[index].quantity += 1;
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${item.name} added to cart`);
+        });
+    });
+</script>
+</body>
+</html>

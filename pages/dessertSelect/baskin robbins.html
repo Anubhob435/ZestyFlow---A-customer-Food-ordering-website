@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZestyFlow</title>
+    <link rel="stylesheet" href="../../style/biriyaniSelect/hungersWorld.css" class="css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <img src="../../images/logo.svg" alt=""></span>
+            
+            <ul>
+                <li><a href="../../home.html" style="color:inherit; text-decoration:none;">Home</a></li>
+                <li>About</li>
+                <li><a href="../../finalmenu.html" style="color:inherit; text-decoration:none;">Menu</a></li>
+                <li><a href="../../account.html" style="color:inherit; text-decoration:none;">Account</a></li>
+                <li><a href="../../cart.html" style="color:inherit; text-decoration:none;">Cart</a></li>
+
+
+            </ul>
+        </nav>
+        
+        <div class="menu-container">
+            <div class="menucard">
+                <img src="../../images/choclate ice cream.jpeg" alt="Choclate Ice Cream" class="food-img" />
+                <div class="menu-info">
+                    <h3>Choclate Ice Cream </h3>
+                    <p> Full of Choclate flavour • ₹100</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/mango ice cream.jpeg" alt="Mango Ice Cream" class="food-img" />
+                <div class="menu-info">
+                    <h3>Mango Ice Cream</h3>
+                    <p>Full of Mabgo flavour  • ₹90</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/vanila.jpeg" alt="vanila ice cream" class="food-img" />
+                <div class="menu-info">
+                    <h3>Vanila Ice Cream</h3>
+                    <p>Full of Vanila flavour  • ₹80</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/Nolen gur ice cream.png" alt="Nolen gurer ice cream" class="food-img" />
+                <div class="menu-info">
+                    <h3>Nolen Gurer Ice Cream</h3>
+                    <p> Full of Nolen Gur flavour • ₹150</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/strawberry ice cream .jpeg" alt="Strawberry Ice Cream" class="food-img" />
+                <div class="menu-info">
+                    <h3>Strawberry Ice Cream</h3>
+                    <p>Full of Strawberry flavour • ₹120</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menucard">
+                <img src="../../images/butterscoth ice cream.jpeg" alt="Butterscotch Ice Cream" class="food-img" />
+                <div class="menu-info">
+                    <h3>Butterscotch Ice Cream</h3>
+                    <p>Full of butterscotch flavour • ₹125</p>
+                    <button class="add-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    const addButtons = document.querySelectorAll('.add-btn');
+    addButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.menucard');
+            const name = card.querySelector('h3').textContent;
+            const priceText = card.querySelector('p').textContent;
+            const price = priceText.match(/₹(\d+)/)[1];
+
+            const item = {
+                name: name,
+                price: parseInt(price),
+                quantity: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            const index = cart.findIndex(i => i.name === item.name);
+            if (index !== -1) {
+                cart[index].quantity += 1;
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${item.name} added to cart`);
+        });
+    });
+</script>
+</body>
+</html>

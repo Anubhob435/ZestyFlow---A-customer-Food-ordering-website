@@ -1,0 +1,203 @@
+*{
+    margin:0; 
+    padding:0;
+}
+
+.container{
+    position:relative;
+}
+
+.navbar{
+    position:sticky;
+    top:0;
+    width:100%;
+    height:70px; /* Increased height for a larger logo */
+    padding:0 10px; /* No vertical padding */
+    background-color:rgb(156, 24, 77);
+    position:relative;
+    display:flex;
+    align-items:center; /* Center items vertically */
+}
+
+.navbar ul{
+    display:flex;
+    gap:40px;
+    list-style:none;
+    justify-content: center;
+    align-items: center;
+    position : absolute;
+    right:45px;
+    top:25px;
+}
+
+.navbar li {
+    display: flex;
+    align-items: center;
+    font-size: 1.205rem;
+    color:white;
+}
+
+.navbar li:hover{
+    color:rgb(49, 18, 79);
+    cursor:pointer;
+}
+
+.navbar img {
+    height: 120px;         /* Fill navbar vertically */
+    width: auto;
+    margin-left:50px;
+    filter: brightness(0) invert(1);
+    display: block;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.searchArea {
+    position:relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left:15vw;
+}
+
+textarea{
+    width: 400px;
+    min-width: 400px;
+    max-width: 400px;
+    box-sizing: border-box; 
+}
+
+.searchbtn {
+    background: rgb(156, 24, 77);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.searchbtn img {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.filter{
+    position:sticky;
+    top:0;
+    width:100%;
+    height:70px; /* Increased height for a larger logo */
+    padding:0 10px; 
+    position:relative;
+    display:flex;
+    align-items:center;
+    background-color:rgba(239, 213, 213, 0.808);
+}
+
+.filter ul{
+    display:flex;
+    gap:40px;
+    list-style:none;
+    justify-content: center;
+    align-items: center;
+    position : absolute;
+    left:12px;
+    top:25px;
+}
+
+.filter li:hover{
+    color:rgb(140, 1, 145);
+    cursor:pointer;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* or space-between/space-around if you prefer */
+    max-width: 1600px; /* ensures room for 5 cards + gaps */
+    margin: 0 auto; /* center the whole row */
+    padding: 20px 10px;
+}
+
+.card{
+    margin:12px;
+    width: 300px;
+    height: 500px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.318);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card img{
+    width: calc(100% - 40px); /* 20px margin on left and right */
+    object-fit: contain;
+    margin: 20px;
+    border-radius: 7px;
+    display: block;
+    background: #f5f5f5; /* Optional: subtle background for empty space */
+}
+
+.card h2,p,button{
+    margin:5px 20px;
+}
+
+.card p{
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.card h2 {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.card button{
+    position:relative;
+    background: rgb(156, 24, 77);
+    border: none;
+    color:white;
+    font-style:bold;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+    display :flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto 20px auto; /* Top, right, bottom, left */
+    display: block;
+}
+
+.card button:hover{
+    color:rgb(243, 255, 11);
+    width:140px;
+}
+
+@media (max-width: 1600px) {
+  .card-container {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1300px) {
+  .card {
+    width: 45%; /* 2 cards per row */
+  }
+}
+
+@media (max-width: 700px) {
+  .card {
+    width: 90%; /* 1 card per row */
+  }
+}

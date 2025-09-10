@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart - ZestyFlow</title>
+  <link rel="stylesheet" href="cart.css">
+  <style>
+    #totalPrice {
+      color: #fff;
+    }
+    body {
+      font-family: sans-serif;
+      background: #24143a;
+      color: #e5e5f7;
+      min-height: 100vh;
+      position: relative;
+      overflow-y: auto;
+      padding: 40px;
+    }
+    .blurry-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .blurry-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(32px);
+      opacity: 0.28;
+      animation: shimmer 3s linear infinite;
+    }
+    .circle1 { width: 380px; height: 380px; background: #a78bfa; top: 8%; left: 12%; animation-delay: 0s; }
+    .circle2 { width: 260px; height: 260px; background: #f3e8ff; top: 60%; left: 70%; animation-delay: 1s; }
+    .circle3 { width: 220px; height: 220px; background: #c4b5fd; top: 30%; left: 60%; animation-delay: 2s; }
+    .circle4 { width: 180px; height: 180px; background: #a21caf; top: 80%; left: 20%; animation-delay: 1.5s; }
+    .circle5 { width: 150px; height: 150px; background: #fbbf24; top: 20%; left: 80%; animation-delay: 2.5s; }
+    @keyframes shimmer {
+      0% { filter: blur(32px) brightness(1); }
+      50% { filter: blur(32px) brightness(1.2); }
+      100% { filter: blur(32px) brightness(1); }
+    }
+  
+  
+  
+    .navbar{
+    position:sticky;
+    top:0;
+    width:100%;
+    height:70px; /* Increased height for a larger logo */
+    padding:0 10px; /* No vertical padding */
+    background-color:rgb(156, 24, 77);
+    position:relative;
+    display:flex;
+    align-items:center; /* Center items vertically */
+}
+
+.navbar ul{
+    display:flex;
+    gap:40px;
+    list-style:none;
+    justify-content: center;
+    align-items: center;
+    position : absolute;
+    right:45px;
+    top:25px;
+}
+
+.navbar li {
+    display: flex;
+    align-items: center;
+    font-size: 1.205rem;
+    color:white;
+}
+
+.navbar li:hover{
+    color:rgb(49, 18, 79);
+    cursor:pointer;
+}
+    .remove-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      background: darkred;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #9c173e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background: #7d0d2c;
+    }
+  </style>
+</head>
+<body>
+<div class="blurry-bg">
+  <div class="blurry-circle circle1"></div>
+  <div class="blurry-circle circle2"></div>
+  <div class="blurry-circle circle3"></div>
+  <div class="blurry-circle circle4"></div>
+  <div class="blurry-circle circle5"></div>
+</div>
+  
+  <h1>Your Cart</h1>
+  <table id="cartTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h3 id="totalPrice"></h3>
+  <button class="btn" onclick="placeOrder()">Place Order</button>
+
+  <script>
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const tbody = document.querySelector('#cartTable tbody');
+      tbody.innerHTML = "";
+      let total = 0;
+
+      if (cart.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Your cart is empty</td></tr>`;
+        document.getElementById('totalPrice').textContent = "";
+        return;
+      }
+
+      cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>₹${item.price}</td>
+          <td>${item.quantity}</td>
+          <td>₹${subtotal}</td>
+          <td><button class="remove-btn" onclick="removeItem(${index})">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('totalPrice').textContent = `Total: ₹${total}`;
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    async function placeOrder() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (!cart.length) return alert("Your cart is empty.");
+
+      const items = cart.map(i => ({
+        name: i.name,
+        price: i.price,
+        quantity: i.quantity
+      }));
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("⚠️ Please login first.");
+        return window.location.href = "pages/login.html";
+      }
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ items })
+        });
+
+        if (res.status === 401) {
+          alert("⚠️ Please login again.");
+          return window.location.href = "pages/login.html";
+        }
+
+        const data = await res.json();
+        if (!res.ok) return alert(data.message || "Failed to place order.");
+
+        // Generate bill text
+        let billText = `ZestyFlow Bill\n\nOrder ID: ${data.orderId}\n\nItems:\n`;
+        items.forEach(i => {
+          billText += `${i.name} x ${i.quantity} — ₹${i.price * i.quantity}\n`;
+        });
+        billText += `\nTotal: ₹${data.total}\n\nThank you for ordering with ZestyFlow!`;
+
+        const blob = new Blob([billText], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `bill-${data.orderId}.txt`;
+        link.click();
+
+        // Clear cart
+        localStorage.removeItem('cart');
+
+        // Redirect to orders.html (root folder)
+        window.location.href = "orders.html?justPlaced=true";
+      } catch (err) {
+        console.error(err);
+        alert("⚠️ Server error. Try again later.");
+      }
+    }
+
+    loadCart();
+  </script>
+</body>
+</html>
