@@ -62,9 +62,22 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "Server is running", timestamp: new Date().toISOString() });
 });
 
-// Catch-all route for any other requests - serve the main page
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "home.html"));
+// Serve specific HTML pages
+app.get("/*.html", (req, res) => {
+  const fileName = req.params[0] + '.html';
+  const filePath = path.join(__dirname, "..", fileName);
+  
+  // Check if file exists
+  if (require('fs').existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).sendFile(path.join(__dirname, "..", "home.html"));
+  }
+});
+
+// Catch-all route for API endpoints only
+app.get("/api/*", (req, res) => {
+  res.status(404).json({ error: "API endpoint not found" });
 });
 
 // Start server first, then try to connect to MongoDB

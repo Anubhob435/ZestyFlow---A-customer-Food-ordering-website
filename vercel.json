@@ -10,26 +10,6 @@
     {
       "src": "/api/(.*)",
       "dest": "/backend/server.js"
-    },
-    {
-      "src": "/images/(.*)",
-      "dest": "/images/$1"
-    },
-    {
-      "src": "/style/(.*)",
-      "dest": "/style/$1"
-    },
-    {
-      "src": "/pages/(.*)",
-      "dest": "/pages/$1"
-    },
-    {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|webp|svg|ico|html|avif|jfif))",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/backend/server.js"
     }
   ]
 }
