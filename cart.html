@@ -173,17 +173,23 @@
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       if (!cart.length) return alert("Your cart is empty.");
 
+      console.log("Cart items:", cart);
+
       const items = cart.map(i => ({
         name: i.name,
         price: i.price,
         quantity: i.quantity
       }));
 
+      console.log("Formatted items for order:", items);
+
       const token = localStorage.getItem("token");
       if (!token) {
         alert("⚠️ Please login first.");
-        return window.location.href = "pages/login.html";
+        return window.location.href = "/pages/login.html";
       }
+
+      console.log("Token found, placing order...");
 
       try {
         const res = await fetch("/api/orders", {
@@ -195,13 +201,23 @@
           body: JSON.stringify({ items })
         });
 
+        console.log("Response status:", res.status);
+        console.log("Response headers:", res.headers);
+
         if (res.status === 401) {
           alert("⚠️ Please login again.");
-          return window.location.href = "pages/login.html";
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          return window.location.href = "/pages/login.html";
         }
 
         const data = await res.json();
-        if (!res.ok) return alert(data.message || "Failed to place order.");
+        console.log("Response data:", data);
+
+        if (!res.ok) {
+          console.error("Order failed:", data);
+          return alert(data.message || "Failed to place order.");
+        }
 
         // Generate bill text
         let billText = `ZestyFlow Bill\n\nOrder ID: ${data.orderId}\n\nItems:\n`;
@@ -218,12 +234,13 @@
 
         // Clear cart
         localStorage.removeItem('cart');
+        alert("✅ Order placed successfully!");
 
         // Redirect to orders.html (root folder)
-        window.location.href = "orders.html?justPlaced=true";
+        window.location.href = "/orders.html?justPlaced=true";
       } catch (err) {
-        console.error(err);
-        alert("⚠️ Server error. Try again later.");
+        console.error("Order placement error:", err);
+        alert("⚠️ Server error. Please try again later.");
       }
     }
 

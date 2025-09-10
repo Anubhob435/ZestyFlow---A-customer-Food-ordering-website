@@ -7,18 +7,42 @@ const router = express.Router();
 // Place order
 router.post("/", requireAuth, async (req, res) => {
   try {
+    console.log("Order placement request:", {
+      user: req.user,
+      body: req.body
+    });
+
     const { items } = req.body;
     if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: "No items" });
+      console.log("Invalid items array:", items);
+      return res.status(400).json({ message: "No items provided or invalid format" });
     }
 
-    const orderItems = items.map(i => ({
-      name: i.name,
-      price: Number(i.price),
-      quantity: Math.max(1, parseInt(i.quantity || 1, 10))
-    }));
+    // Validate and sanitize items
+    const orderItems = items.map((i, index) => {
+      console.log(`Processing item ${index}:`, i);
+      
+      if (!i.name || typeof i.name !== 'string') {
+        throw new Error(`Item ${index}: Missing or invalid name`);
+      }
+      if (!i.price || isNaN(Number(i.price))) {
+        throw new Error(`Item ${index}: Missing or invalid price`);
+      }
+      if (!i.quantity || isNaN(Number(i.quantity))) {
+        throw new Error(`Item ${index}: Missing or invalid quantity`);
+      }
+
+      return {
+        name: i.name.trim(),
+        price: Number(i.price),
+        quantity: Math.max(1, parseInt(i.quantity, 10))
+      };
+    });
+
+    console.log("Processed order items:", orderItems);
 
     const total = orderItems.reduce((sum, it) => sum + it.price * it.quantity, 0);
+    console.log("Calculated total:", total);
 
     const order = await Order.create({
       user: req.user.id,
@@ -27,15 +51,26 @@ router.post("/", requireAuth, async (req, res) => {
       status: "placed"
     });
 
+    console.log("Order created successfully:", order._id);
+
     res.status(201).json({
-      message: "Order placed",
+      message: "Order placed successfully",
       orderId: order._id,
       total,
       createdAt: order.createdAt
     });
   } catch (err) {
     console.error("Order place error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error stack:", err.stack);
+    
+    if (err.message.includes('Item')) {
+      return res.status(400).json({ message: err.message });
+    }
+    
+    res.status(500).json({ 
+      message: "Server error while placing order",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 

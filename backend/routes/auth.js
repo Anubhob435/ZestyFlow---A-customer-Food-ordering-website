@@ -98,18 +98,41 @@ router.post("/login", async (req, res) => {
 // Get logged-in user
 router.get("/me", async (req, res) => {
   try {
+    console.log("Get user info request");
+    
     const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ message: "No token" });
+    if (!authHeader) {
+      console.log("No authorization header");
+      return res.status(401).json({ message: "No token provided" });
+    }
 
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-passwordHash");
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!token) {
+      console.log("No token in header");
+      return res.status(401).json({ message: "Invalid token format" });
+    }
 
+    console.log("Verifying token...");
+    const decoded = jwt.verify(token, JWT_SECRET);
+    console.log("Token verified, user ID:", decoded.id);
+    
+    const user = await User.findById(decoded.id).select("-passwordHash");
+    if (!user) {
+      console.log("User not found for ID:", decoded.id);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("User found:", user.email);
     res.json({ user });
   } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: "Invalid token" });
+    console.error("Get user error:", err);
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: "Token expired" });
+    }
+    res.status(401).json({ message: "Authentication failed" });
   }
 });
 
