@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon backend/server.js",
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "build": "echo 'No build step required for this project'",
+    "vercel-build": "echo 'No build step required for this project'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
